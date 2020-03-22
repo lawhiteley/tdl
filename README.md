@@ -27,11 +27,11 @@ tdl {
 `hueApiKey` - Philips have a [guide](https://developers.meethue.com/develop/get-started-2/) for grabbing this.
 
 ## Disclaimer
-This plugin is naught but a toy - I would strongly recommend against checking it in to any codebase you care about.
+This is naught but a toy - I would strongly recommend against checking it in to any codebase you care about.
 
 ## Caveats
 * Doesn't yet return lights to their previous state after signalling a result.
 * Supplying the bridge's IP is currently mandatory but bridge autodiscovery is supported by YAHA and could be utilised here in the future.
 
 ## Notes
-All the heavy lifting in this plugin is being done by the [yetanotherhueapi](https://github.com/ZeroOne3010/yetanotherhueapi) library.
+All the heavy lifting is being done by the [yetanotherhueapi](https://github.com/ZeroOne3010/yetanotherhueapi) library.
