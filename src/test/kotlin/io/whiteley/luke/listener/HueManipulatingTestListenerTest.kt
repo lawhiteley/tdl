@@ -7,6 +7,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import io.whiteley.luke.config.TdlPluginExtension
+import io.whiteley.luke.exception.BridgeConnectionException
 import io.whiteley.luke.service.HueService
 import org.gradle.api.logging.Logger
 import org.gradle.api.tasks.testing.TestDescriptor
@@ -37,7 +38,7 @@ internal class HueManipulatingTestListenerTest {
 
     @BeforeEach
     fun eachTest() {
-        ext = TdlPluginExtension("test-room", "127.0.0.1", "12345")
+        ext = TdlPluginExtension(MOCK_ROOM, MOCK_IP, MOCK_API_KEY)
         testListener = HueManipulatingTestListener(logger, ext, hueService)
     }
 
@@ -62,6 +63,17 @@ internal class HueManipulatingTestListenerTest {
     }
 
     @Test
+    fun `HueService exceptions are caught and logged`() {
+        every { suite.parent } returns null
+        every { result.resultType } returns SUCCESS
+        every { hueService.sendResultToRoom(result.resultType, MOCK_ROOM) } throws BridgeConnectionException("test")
+
+        testListener.afterSuite(suite, result)
+
+        verify { logger.error(any()) }
+    }
+
+    @Test
     fun `Error is logged if hueApiKey is not supplied`() {
         ext.hueApiKey = null
 
@@ -80,6 +92,9 @@ internal class HueManipulatingTestListenerTest {
     }
 
     companion object {
+        private const val MOCK_IP = "127.0.0.1"
+        private const val MOCK_ROOM = "test-room"
+        private const val MOCK_API_KEY = "12345"
         private const val CONFIG_ERROR = "tdl failed: Both hueApiKey and bridgeIp must be supplied"
     }
 }

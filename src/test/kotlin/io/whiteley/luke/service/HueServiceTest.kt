@@ -9,10 +9,12 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.verify
+import io.whiteley.luke.exception.BridgeConnectionException
 import io.whiteley.luke.exception.RoomNotFoundException
 import io.whiteley.luke.service.ResultColours.AMBER
 import io.whiteley.luke.service.ResultColours.GREEN
 import io.whiteley.luke.service.ResultColours.RED
+import java.net.ConnectException
 import java.util.Optional
 import org.gradle.api.tasks.testing.TestResult.ResultType
 import org.gradle.api.tasks.testing.TestResult.ResultType.FAILURE
@@ -65,6 +67,15 @@ internal class HueServiceTest {
         every { mockHue.getRoomByName(MOCK_ROOM) } returns Optional.empty()
 
         assertThrows<RoomNotFoundException> {
+            hueService.sendResultToRoom(SUCCESS, MOCK_ROOM)
+        }
+    }
+
+    @Test
+    internal fun `ConnectException is caught and propagated as BridgeConnectionException`() {
+        every { mockHue.getRoomByName(MOCK_ROOM) } throws ConnectException()
+
+        assertThrows<BridgeConnectionException> {
             hueService.sendResultToRoom(SUCCESS, MOCK_ROOM)
         }
     }
