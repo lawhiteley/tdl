@@ -30,7 +30,7 @@ tdl {
 This plugin is naught but a toy - I would strongly recommend against checking it in to any codebase you care about.
 
 ## Caveats
-* Doesn't yet return lights to their previous state so you'll be sitting in a (hopefully green) room until you change them back yourself.
+* Doesn't yet return lights to their previous state after signalling a result.
 * Supplying the bridge's IP is currently mandatory but bridge autodiscovery is supported by YAHA and could be utilised here in the future.
 
 ## Notes
