@@ -38,6 +38,7 @@ internal class HueManipulatingTestListenerTest {
 
     @BeforeEach
     fun eachTest() {
+        every { suite.parent } returns null
         ext = TdlPluginExtension(MOCK_ROOM, MOCK_IP, MOCK_API_KEY)
         testListener = HueManipulatingTestListener(logger, ext, hueService)
     }
@@ -45,7 +46,6 @@ internal class HueManipulatingTestListenerTest {
     @Test
     fun `Result is sent to specified room after all suites have been run`() {
         val expectedResult = SUCCESS
-        every { suite.parent } returns null
         every { result.resultType } returns expectedResult
 
         testListener.afterSuite(suite, result)
@@ -64,7 +64,6 @@ internal class HueManipulatingTestListenerTest {
 
     @Test
     fun `HueService exceptions are caught and logged`() {
-        every { suite.parent } returns null
         every { result.resultType } returns SUCCESS
         every { hueService.sendResultToRoom(result.resultType, MOCK_ROOM) } throws BridgeConnectionException("test")
 
